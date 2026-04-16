@@ -1,8 +1,55 @@
-let number1 = '';
-let operator = '';
-let number2 = '';
-let current = '';
-let result = '';
+const calc = {
+  number1: '',
+  number2: '',
+  operator: '',
+  current: '',
+  result: '',
+  
+  add: function() {
+    this.result = this.number1 + this.number2;
+  },
+  subtract: function() {
+    this.result = this.number1 - this.number2;
+  },
+  multiply: function() {
+    this.result = this.number1 * this.number2;
+  },
+  divide: function() {
+    this.result = this.number1 / this.number2;
+  },
+  clear: function() {
+    this.number1 = '';
+    this.number2 = '';
+    this.operator = '';
+    this.current = '';
+  },
+  operate: function() {
+    const operator = this.operator;
+
+    if (!operator) return;
+
+    if (operator === '+') {
+      this.add();
+    } else if(operator === '-'){
+      this.subtract();
+    } else if(operator === '*'){
+      this.multiply();
+    } else if(operator === '/'){
+      this.divide();
+    } 
+
+    this.result = +this.result.toFixed(5);
+    if (!isFinite(this.result)) {
+      this.result = 'Math error';
+    }
+    this.result = String(this.result);
+  
+    this.clear();
+    this.current = this.result;
+    renderDisplay();
+  }
+
+}
 const numberContainer = document.querySelector('.numbers');
 const operatorContainer = document.querySelector('.operators');
 
@@ -11,41 +58,7 @@ renderPage();
 function renderPage() {
   generateNumberButtons();
   generateOperatorButtons();
-  addButtonElement('=', 'equal', handleOperatorClick, numberContainer)
-}
-
-function add(a, b) {
-  return a + b;
-}
-
-function subtract(a, b) {
-  return a - b;
-}
-
-function multiply(a, b) {
-  return a * b;
-}
-
-function divide(a, b) {
-  return a / b;
-}
-
-function operate() {
-  let result;
-  if (operator === '+') {
-    result = add(number1, number2);
-  } else if(operator === '-'){
-    result = subtract(number1, number2);
-  } else if(operator === '*'){
-    result = multiply(number1, number2);
-  } else if(operator === '/'){
-    result = divide(number1, number2);
-  } 
-
-  clear();
-
-  current = result;
-  renderDisplay();
+  addButtonElement('=', 'equal', handleEqualClick, numberContainer)
 }
 
 function addButtonElement(text, className, handleClick, container) {
@@ -63,8 +76,13 @@ function generateNumberButtons() {
     addButtonElement(i, 'number', handleNumberClick, numberContainer);
   }
 }
+
 function handleNumberClick(e) {
-  current += e.target.textContent;
+  if (calc.current === calc.result){
+    calc.current = '';
+  }
+
+  calc.current += e.target.textContent;
   renderDisplay();
 }
 
@@ -78,32 +96,36 @@ function generateOperatorButtons() {
 
 function handleOperatorClick(e) {
   const operatorNow = e.target.textContent;
-  if ((number1 && current) || operatorNow === '=') {
-    number2 = +current;
-    current = '';
-    operate();
-  } else if (current && !number2) {
-    number1 = +current;
-    current = '';
-    operator = operatorNow;
-  } else if (number1) {
-    operator = operatorNow;
+
+  if ((calc.operator && calc.current)) {
+    calc.number2 = +calc.current;
+    calc.current = '';
+    calc.operate();
+  }
+  if (calc.current && !calc.number2) {
+    calc.number1 = +calc.current;
+    calc.current = '';
+    calc.operator = operatorNow;
+    console.log('add operator', calc);
+
+  } else if (calc.number1) {
+    calc.operator = operatorNow;
+    console.log('change operator', calc);
   } 
 
-  
-  renderDisplay();
 }
 
 function renderDisplay() {
   const display = document.querySelector('#display');
-  display.textContent = current;
-  console.log(current);
-  console.log(operator);
+  display.textContent = calc.current;
+  console.log(calc);
 }
 
-function clear(){
-  number1 = '';
-  number2 = '';
-  current = '';
-  operator = '';
+function handleEqualClick(e) {
+  if (!calc.operator) return;
+
+  calc.number2 = +calc.current;
+  calc.current = '';
+  calc.operate();
+  
 }
