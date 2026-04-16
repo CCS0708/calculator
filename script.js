@@ -53,6 +53,12 @@ const calc = {
 const numberContainer = document.querySelector('.numbers');
 const operatorContainer = document.querySelector('.operators');
 
+//keydown part
+const keyList = '0123456789.+-*x/cEnter=Backspace';
+const numberList = '0123456789.';
+const body = document.querySelector('body');
+body.addEventListener('keydown', handleKeyDown);
+
 renderPage();
 
 function renderPage() {
@@ -150,9 +156,9 @@ function handleBackspace(e) {
   renderDisplay();
 }
 
-const numberList = '0123456789.';
-const body = document.querySelector('body');
-body.addEventListener('keydown', (e) => {
+function handleKeyDown(e) {
+  if (!keyList.includes(e.key)) return;
+
   if (numberList.includes(e.key)) {
     if (calc.current === calc.result){
       calc.current = '';
@@ -164,8 +170,7 @@ body.addEventListener('keydown', (e) => {
     calc.current += e.key;
     renderDisplay();
   }
-  if (e.key === 'Enter' || e.key === '=') {
-    handleEqualClick();
-  }
+  if (e.key === 'Enter' || e.key === '=') handleEqualClick();
   if (e.key === 'Backspace') handleBackspace();
-});
+  if (e.key === 'c') handleClearClick();
+}
