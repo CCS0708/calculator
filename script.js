@@ -155,6 +155,30 @@ function handleBackspace(e) {
   calc.current = calc.current.slice(0, -1);
   renderDisplay();
 }
+function handleOperatorKey(op) {
+  
+  if (calc.current === 'Math error') {
+    calc.clear();
+    return;
+  }
+
+  if ((calc.operator && calc.current)) {
+    calc.number2 = +calc.current;
+    calc.current = '';
+    calc.operate();
+  }
+  if (calc.current && !calc.number2) {
+    calc.number1 = +calc.current;
+    calc.current = '';
+    calc.operator = op;
+    console.log('add operator', calc);
+
+  } else if (calc.number1) {
+    calc.operator = op;
+    console.log('change operator', calc);
+  } 
+
+}
 
 function handleKeyDown(e) {
   if (!keyList.includes(e.key)) return;
@@ -173,4 +197,9 @@ function handleKeyDown(e) {
   if (e.key === 'Enter' || e.key === '=') handleEqualClick();
   if (e.key === 'Backspace') handleBackspace();
   if (e.key === 'c') handleClearClick();
+
+  if (e.key === '+') handleOperatorKey('+');
+  if (e.key === '-') handleOperatorKey('-');
+  if (e.key === '*' || e.key === 'x') handleOperatorKey('*');
+  if (e.key === '/') handleOperatorKey('/');
 }
