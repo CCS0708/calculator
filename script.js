@@ -57,8 +57,9 @@ renderPage();
 
 function renderPage() {
   generateNumberButtons();
+  addButtonElement('Clear', 'clear', handleClearClick, operatorContainer);
   generateOperatorButtons();
-  addButtonElement('=', 'equal', handleEqualClick, numberContainer)
+  addButtonElement('=', 'equal', handleEqualClick, numberContainer);
 }
 
 function addButtonElement(text, className, handleClick, container) {
@@ -96,6 +97,10 @@ function generateOperatorButtons() {
 
 function handleOperatorClick(e) {
   const operatorNow = e.target.textContent;
+  if (calc.current === 'Math error') {
+    calc.clear();
+    return;
+  }
 
   if ((calc.operator && calc.current)) {
     calc.number2 = +calc.current;
@@ -128,4 +133,9 @@ function handleEqualClick(e) {
   calc.current = '';
   calc.operate();
   
+}
+
+function handleClearClick(e) {
+  calc.clear();
+  renderDisplay();
 }
