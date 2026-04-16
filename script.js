@@ -79,8 +79,12 @@ function generateNumberButtons() {
 }
 
 function handleNumberClick(e) {
+  const numberNow = e.target.textContent;
   if (calc.current === calc.result){
     calc.current = '';
+  }
+  if (numberNow === '.' && calc.current.includes('.')) {
+    return;
   }
 
   calc.current += e.target.textContent;
