@@ -11,7 +11,7 @@ body {
 
 #container {
   margin-top: 30px;
-  width: 450px;
+  width: 540px;
   height: 630px;
   border: 1px solid black;
   display: flex;
@@ -54,11 +54,11 @@ body {
 }
 .operators {
   margin: 10px;
-  flex: 1 0 0;
+  flex: 2 0 0;
   max-width: 200px;
   display: flex;
   gap: 10px;
-  flex-flow: wrap column;
+  flex-flow: wrap row;
 }
 .operator {
   box-sizing: border-box;

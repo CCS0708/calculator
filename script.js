@@ -58,6 +58,7 @@ renderPage();
 function renderPage() {
   generateNumberButtons();
   addButtonElement('Clear', 'clear', handleClearClick, operatorContainer);
+  addButtonElement('Backspace', 'clear', handleBackspace, operatorContainer);
   generateOperatorButtons();
   addButtonElement('=', 'equal', handleEqualClick, numberContainer);
 }
@@ -144,6 +145,11 @@ function handleClearClick(e) {
   renderDisplay();
 }
 
+function handleBackspace(e) {
+  calc.current = calc.current.slice(0, -1);
+  renderDisplay();
+}
+
 const numberList = '0123456789.';
 const body = document.querySelector('body');
 body.addEventListener('keydown', (e) => {
@@ -158,4 +164,8 @@ body.addEventListener('keydown', (e) => {
     calc.current += e.key;
     renderDisplay();
   }
+  if (e.key === 'Enter' || e.key === '=') {
+    handleEqualClick();
+  }
+  if (e.key === 'Backspace') handleBackspace();
 });
