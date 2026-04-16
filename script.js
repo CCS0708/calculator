@@ -143,3 +143,19 @@ function handleClearClick(e) {
   calc.clear();
   renderDisplay();
 }
+
+const numberList = '0123456789.';
+const body = document.querySelector('body');
+body.addEventListener('keydown', (e) => {
+  if (numberList.includes(e.key)) {
+    if (calc.current === calc.result){
+      calc.current = '';
+    }
+    if (e.key === '.' && calc.current.includes('.')) {
+      return;
+    }
+  
+    calc.current += e.key;
+    renderDisplay();
+  }
+});
