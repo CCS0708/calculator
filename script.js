@@ -1,7 +1,24 @@
 let number1 = 0;
 let operator;
 let number2 = 0;
+let buttonContainer = document.querySelector('#button-container');
+let count = 1;
+for (let i = 7; i >= 0; i++){
+  const button = document.createElement('button');
+  button.textContent = i;
+  button.classList.add('number');
+  button.addEventListener('click',() => {
+    
+  })
+  buttonContainer.appendChild(button);
 
+  if (count === 3) {
+    count = 1;
+    i -= 6;
+  } else {
+    count += 1;
+  }
+}
 
 function add(a, b) {
   return a + b;
