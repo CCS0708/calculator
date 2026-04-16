@@ -1,36 +1,17 @@
-const buttons = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0, '.', '=']
-const operators = ['+', '-', '*', '/']
 let number1 = '';
-let operator;
+let operator = '';
 let number2 = '';
+let current = '';
+let result = '';
 const numberContainer = document.querySelector('.numbers');
 const operatorContainer = document.querySelector('.operators');
-// generate buttons element
-for (let i of buttons){
-  const button = document.createElement('button');
-  button.textContent = i;
-  button.classList.add('number');
-  button.addEventListener('click',(e) => {
-    if(!operator){
-      number1 += e.target.textContent;
-    } else {
-      number2 += e.target.textContent;
-    }
-    console.log(number1)
-    console.log(number2)
-  })
-  numberContainer.appendChild(button);
-}
-for (let i of operators) {
-  const button = document.createElement('button');
-  button.textContent = i;
-  button.classList.add('operator');
-  button.addEventListener('click', (e) => {
-    if (number1){
-      operator = e.target.textContent;
-    }
-  })
-  operatorContainer.appendChild(button);
+
+renderPage();
+
+function renderPage() {
+  generateNumberButtons();
+  generateOperatorButtons();
+  addButtonElement('=', 'equal', handleOperatorClick, numberContainer)
 }
 
 function add(a, b) {
@@ -49,15 +30,80 @@ function divide(a, b) {
   return a / b;
 }
 
-function operate(a, operator, b) {
+function operate() {
+  let result;
   if (operator === '+') {
-    return add(a, b);
+    result = add(number1, number2);
   } else if(operator === '-'){
-    return subtract(a, b);
+    result = subtract(number1, number2);
   } else if(operator === '*'){
-    return multiply(a, b);
+    result = multiply(number1, number2);
   } else if(operator === '/'){
-    return divide(a, b);
+    result = divide(number1, number2);
+  } 
+
+  clear();
+
+  current = result;
+  renderDisplay();
+}
+
+function addButtonElement(text, className, handleClick, container) {
+  const button = document.createElement('button');
+    button.textContent = text;
+    button.classList.add(className);
+    button.addEventListener('click', handleClick)
+    container.appendChild(button);
+}
+
+function generateNumberButtons() {
+  const buttons = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0, '.'];
+
+  for (let i of buttons){
+    addButtonElement(i, 'number', handleNumberClick, numberContainer);
+  }
+}
+function handleNumberClick(e) {
+  current += e.target.textContent;
+  renderDisplay();
+}
+
+function generateOperatorButtons() {
+  const operators = ['+', '-', '*', '/']
+  for (let i of operators) {
+    addButtonElement(i, 'operator', handleOperatorClick, operatorContainer);
+
   }
 }
 
+function handleOperatorClick(e) {
+  const operatorNow = e.target.textContent;
+  if ((number1 && current) || operatorNow === '=') {
+    number2 = +current;
+    current = '';
+    operate();
+  } else if (current && !number2) {
+    number1 = +current;
+    current = '';
+    operator = operatorNow;
+  } else if (number1) {
+    operator = operatorNow;
+  } 
+
+  
+  renderDisplay();
+}
+
+function renderDisplay() {
+  const display = document.querySelector('#display');
+  display.textContent = current;
+  console.log(current);
+  console.log(operator);
+}
+
+function clear(){
+  number1 = '';
+  number2 = '';
+  current = '';
+  operator = '';
+}
